@@ -60,3 +60,4 @@ connectdb()
 app.get("/todos", (req, res) => {
   res.send(todos);
 });
+export default app;
