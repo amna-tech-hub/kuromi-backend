@@ -11,11 +11,10 @@ app.use(express.json())
 app.use(cookieParser())
 
 // Full todo list array
-
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-      credentials: true,
+    origin: "https://kuromi-task.vercel.app", 
+    credentials: true,
   }),
 );
 
