@@ -4,12 +4,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-import {User} from '../backend/src/models/user.model.js'
-import cookieParser from "cookie-parser";
+import {User} from './src/models/user.model.js'
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(cookieParser());
+app.use(cookieParser())
 
 // Full todo list array
 
@@ -32,6 +31,7 @@ app.get("/", (req, res) => {
 // here we will register routes
 import {authrouter} from './src/routes/authRoute.js'
 import { todoRouter } from "./src/routes/todoRouter.js";
+import cookieParser from "cookie-parser";
 app.use('/auth',authrouter)
 app.use('/todo',todoRouter)
 
