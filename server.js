@@ -10,18 +10,9 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 const app = express();
-// CORS Configuration
+// CORS Configuration - Strictly locked down to your production domain
 const corsOptions = {
-  origin: [
-    'https://kuromi-task.vercel.app',
-    'https://kuromi-task-v6fu.vercel.app',
-    'https://resplendent-cuchufli-04a02b.netlify.app', // Added your new Netlify live link
-    'http://localhost:5173',
-    'http://localhost:3000',
-    /^https:\/\/kuromi-task-.*\.vercel\.app$/,
-    /^https:\/\/kuromi-backend-.*\.vercel\.app$/,
-    /^https:\/\/.*\.netlify\.app$/                     // Added wildcard regex for all Netlify deploys
-  ],
+  origin: 'https://kuromi-task.netlify.app', 
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
