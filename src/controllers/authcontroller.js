@@ -5,13 +5,15 @@ import { sendOTPEmail,generateOTP } from "../services/email.service.js";
 
 export const postCreateUser = async (req, res, next) => {
   const { name, password, email } = req.body;
+  console.log(name,password,email);
+  
   try {
     if (!name || !password || !email) {
-      return res.status(404).json({ massage: "missing field" });
+      return res.status(404).json({ message: "missing field" });
     }
     const userExist = await User.findOne({ email: email });
     if (userExist) {
-      return res.status(404).json({ massage: "User already exist" });
+      return res.status(404).json({ message: "User already exist" });
     }
     const genSalt = await bcrypt.genSalt();
     let hashedPassword = await bcrypt.hash(password, genSalt);
@@ -27,6 +29,7 @@ const user = await User.create({
     expiresAt: expiresAt
   }
 }); 
+console.log("csme inside send mailer");
 
 let sendmail=await sendOTPEmail(email,code,name)
 

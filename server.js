@@ -10,16 +10,17 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 const app = express();
-
 // CORS Configuration
 const corsOptions = {
   origin: [
     'https://kuromi-task.vercel.app',
     'https://kuromi-task-v6fu.vercel.app',
+    'https://resplendent-cuchufli-04a02b.netlify.app', // Added your new Netlify live link
     'http://localhost:5173',
     'http://localhost:3000',
     /^https:\/\/kuromi-task-.*\.vercel\.app$/,
-    /^https:\/\/kuromi-backend-.*\.vercel\.app$/
+    /^https:\/\/kuromi-backend-.*\.vercel\.app$/,
+    /^https:\/\/.*\.netlify\.app$/                     // Added wildcard regex for all Netlify deploys
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -27,12 +28,8 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-// Apply CORS middleware - THIS IS ALL YOU NEED
+// Apply CORS middleware
 app.use(cors(corsOptions));
-
-// ❌ DELETE THIS LINE - it's causing the error
-// app.options('*', cors(corsOptions));
-
 // Other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
