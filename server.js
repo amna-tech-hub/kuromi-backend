@@ -10,16 +10,15 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 const app = express();
-// CORS Configuration - Strictly locked down to your production domain
+// CORS Configuration - Strictly locked down to  production domain
 const corsOptions = {
-  origin: 'https://kuromi-task.netlify.app', 
+  origin: ['https://kuromi-task.netlify.app', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   optionsSuccessStatus: 200
 };
-
-// Apply CORS middleware
+//  CORS middleware
 app.use(cors(corsOptions));
 // Other middleware
 app.use(express.json());
@@ -41,20 +40,20 @@ app.use('/todo', todoRouter);
 // Database connection
 async function connectdb() {
   try {
-    console.log("📡 Connecting to MongoDB...");
+    console.log("Connecting to MongoDB...");
     await mongoose.connect(process.env.DB_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       family: 4
     });
-    console.log("✅ MongoDB Connected Successfully!");
+    console.log(" MongoDB Connected Successfully!");
     
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(` Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.log("❌ Failed to connect to DB:", err.message);
+    console.log(" Failed to connect to DB:", err.message);
     process.exit(1);
   }
 }
