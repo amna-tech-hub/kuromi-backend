@@ -25,7 +25,6 @@ export const generateOTP = () => {
 
 // Send OTP email
 export const sendOTPEmail = async (email, otp, name) => {
-     console.log("came");
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,

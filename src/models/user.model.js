@@ -21,7 +21,11 @@ required:true
 },
 otp: {
   code: String,
-  expiresAt: Date
+  expiresAt: Date,
+  attempts:{type:Number,default:0},
+  resendAt:{type:Date,default:null},
+  resentcount:{type:Number,default:0}
+
 }
 
 })

@@ -8,7 +8,6 @@ export const posttodo = async (req, res, next) => {
       message: " suess ",
     });
   } catch (err) {
-    console.log("some error while adding category", err);
     return res.status(404).json({
       message: ` some thing wrong ${err}`,
     });
@@ -54,10 +53,8 @@ export const postsubtodo = async (req, res) => {
 
 
 export const getallsubtodo = async (req, res) => { 
-  console.log(req,"ll");
      //it is get
   const {userId,categoryName }= req.body
-console.log(userId," your user id");
 
   if (!userId) {
     return res.status(400).json({
@@ -66,12 +63,10 @@ console.log(userId," your user id");
     });
   }
   let todocat = await TodoCategory.find({ userId: userId });
-console.log(todocat,"tour category whith subtodos");
  let subtodo = await TodoCategory.findOne({
       userId: userId,
       categoryName: categoryName
     });
- console.log(subtodo.subtodos,"your all subtodos");
   subtodo=subtodo.subtodos
   return res.json({
     message: "done",
@@ -87,7 +82,6 @@ const {userid,subtodoid}=req.body
 try{
   let category = await TodoCategory.findOne({ categoryName: subtodocat,userId:userid});
   
-   console.log(category," your subtodo that you want to delet");
   let deletedsubtodo=await TodoCategory.updateOne(category, {
     $pull: {
       subtodos: {
@@ -95,7 +89,6 @@ try{
       },
     },
   });
-  console.log(deletedsubtodo,"deletedsubtodo");
  
      res.json({message:` sucessfully deleted the subtodo `
      })
@@ -103,6 +96,28 @@ try{
 }
 catch(error){
 console.log(error);
+return res.json({
+  message:error
+})
+
+} 
+};
+
+
+export const postdeletetodo = async (req, res) => {
+  //  const category = req.body.categoryName;
+  // const { todoTitle } = req.body;
+const {todoid}=req.body
+
+try{
+  
+  let deletedtodo=await TodoCategory.findByIdAndDelete({_id:todoid})
+ 
+     res.json({message:` sucessfully deleted the todo `
+     })
+
+}
+catch(error){
 return res.json({
   message:error
 })
