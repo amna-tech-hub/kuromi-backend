@@ -1,7 +1,8 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendOTPEmail, generateOTP } from "../services/email.service.js";
+import { sendOTPEmail, generateOTP, sendResetPasswordEmail } from "../services/email.service.js";
+import { temptoken } from "../models/temptoken.model.js";
 
 export const postCreateUser = async (req, res, next) => {
   const { name, password, email } = req.body;
@@ -60,13 +61,17 @@ export const postLogin = async (req, res, next) => {
 
     const existedUser = await User.findOne({ email });
     if (!existedUser) {
-      res.status(400).json({
+      
+      return res.status(400).json({
         message: "User not found .please register yourself before login",
       });
     }
+   
+    
     const match = await bcrypt.compare(password, existedUser.password);
     if (!match) {
-      res.status(400).json({ message: "incorrect Password" });
+
+     return res.status(400).json({ message: "incorrect Password" });
     }
     let token = jwt.sign({ id: existedUser._id }, process.env.JWT_PASSWORD, {
       expiresIn: "2d",
@@ -79,7 +84,9 @@ export const postLogin = async (req, res, next) => {
     };
     // cookie want three things    nameOFcookie,whatToPass,OptionsWhenToExpire
     res.cookie("token", token, cookieOptions);
+    
     return res.status(200).json({
+
       success: true,
       message: "Logged in successfully",
       user: {
@@ -262,3 +269,68 @@ export const resendOtp = async (req, res, next) => {
     });
   }
 };
+
+export const postresetpassword=async(req,res)=>{
+
+ const {password}=req.body.data.formdata
+const {token}=req.body.data
+const{email}=req.body.data
+const user=await User.findOne({email})
+  const genSalt = await bcrypt.genSalt();
+    let hashedPassword = await bcrypt.hash(password, genSalt);
+    
+user.password = hashedPassword 
+await user.save()
+return res.json({message:" your passwrod has been successfully updated"})
+
+}
+
+
+export const postforgetpassword=async(req,res)=>{
+let email=req.body.data
+const existedUser=await User.findOne({email})
+if(!existedUser){
+  return res.status(404).json({message:"user not found"})
+}
+const token=12345
+await temptoken.create({
+ token,
+     userId:existedUser._id,
+   createdAt: Date.now()
+   
+ 
+})
+const FRONTEND_URL=process.env.FRONTEND_URL
+sendResetPasswordEmail(email,`${FRONTEND_URL}/auth/resetpassword/${token}`,existedUser.name)
+
+}
+
+export const verifyresetpassword=async(req,res)=>{
+const {token}=req.params
+if(!token){
+  return res.status(404).json({message:"token not received"})
+}
+
+let {userId}= await temptoken.findOne({token})
+let user=await User.findOne({_id:userId})
+
+if(!user){
+    return res.json({message:"user not found"})
+
+}
+if(!user.email){
+    return res.json({message:"email was not given"})
+
+}
+if(isVerified==false){
+      return res.json({message:"user is not verified"})
+
+}
+
+res.status(200).json(
+  {
+
+    email:user.email,
+    message:"sucess"})
+}
+

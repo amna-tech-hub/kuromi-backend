@@ -35,6 +35,22 @@ export const sendOTPEmail = async (email, otp, name) => {
       <p>This OTP expires in 10 minutes.</p>
     `
   };
+ 
+  
+  await transporter.sendMail(mailOptions);
+};
+
+ export const sendResetPasswordEmail = async (email, url, name) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: `Your OTP for verification `,
+    html: `
+      <h2>Hello ${name},</h2>
+      <p>Your passwordreset link is here <a href=${url}>resetpassword<a></strong></p>
+      <p>This  expires in 5 minutes.</p>
+    `
+  }
   
   await transporter.sendMail(mailOptions);
 };
